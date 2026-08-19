@@ -1,6 +1,6 @@
 # Báo Cáo Thực Hành & Thuyết Minh Kỹ Thuật — Lab 19: GraphRAG vs Flat RAG
 
-**Học viên:** [Họ và Tên]  
+**Học viên:** Hoàng Trọng Đại 
 **Khóa học:** AICB-K34 · Track 3: GraphRAG  
 **Ngày thực hiện:** 20/08/2026
 
@@ -125,19 +125,19 @@
 ---
 
 ### 3. Kế hoạch Áp dụng vào Đồ án Thực tế (Action Plan)
-- **Tên đồ án / Dự án:** [Điền tên dự án thực tế của bạn]
-- **Đặc thù bài toán & Lý do chọn giải pháp:** [Đánh giá xem bài toán của bạn có thực sự cần GraphRAG (nhiều thực thể liên kết phức tạp, câu hỏi multi-hop/cross-doc thường xuyên) hay Flat/Hybrid RAG đã đủ]
+- **Tên đồ án / Dự án:** P-168 — AI Agent phát hiện tin giả và link độc (URL/domain risk scoring: rule + blacklist + reputation intel + LLM claim verification).
+- **Đặc thù bài toán & Lý do chọn giải pháp:** Có cần GraphRAG. Các URL/domain độc hại thường **liên kết nhau qua hạ tầng dùng chung** (cùng WHOIS registrant, cùng IP/hosting, cùng brand bị giả mạo, cùng chiến dịch lừa đảo) — đây là bài toán multi-hop/cross-doc điển hình ("domain này có liên hệ gì với 5 domain đã bị blacklist trước đó?") mà Flat vector search trên corpus fact-check hiện tại không trả lời được. GraphRAG chỉ nên bổ sung cho **retrieve_evidence/verify_claim** ở các case rủi ro trung bình-cao cần giải thích, không thay thế toàn bộ rule engine tốc độ cao ở đầu pipeline.
 - **Cấu trúc Node & Relation dự kiến:**
-  - Nodes: `...`
-  - Relations: `...`
-- **Chiến lược xử lý Super-node & Entity Resolution:** [Dựa trên bài học threshold=0.40 và Lexical Guard ở lab này để thiết kế ngưỡng phù hợp với domain của bạn]
+  - Nodes: `Domain`, `URL`, `Registrant` (WHOIS), `IP/Hosting`, `Brand`, `Campaign`, `BlacklistEntry`
+  - Relations: `REGISTERED_BY`, `RESOLVES_TO`, `IMPERSONATES` (brand), `SHARES_INFRA_WITH`, `PART_OF_CAMPAIGN`, `FLAGGED_BY` (nguồn: VirusTotal/Safe Browsing/security-admin)
+- **Chiến lược xử lý Super-node & Entity Resolution:** Domain/hosting dùng chung (Cloudflare, URL shortener) sẽ thành super-node cực lớn — bắt buộc áp `SUPER_NODE_DEGREE` cap như lab này để tránh 1 IP shared-hosting kéo theo hàng nghìn domain không liên quan vào context. Entity Resolution cho `Registrant`/`Brand` nên dùng ngưỡng **cao** (gần 0.90, khác với 0.40 của lab) vì đây là domain an ninh — false merge (gộp nhầm 2 registrant khác nhau) nguy hiểm hơn nhiều so với bỏ sót liên kết.
 
 ---
 
 ## 🎯 TỰ ĐÁNH GIÁ
 | Tiêu chí | Điểm tự chấm (1–5) | Ghi chú |
 |----------|-------------------|---------|
-| Mức độ hiểu bài giảng GraphRAG | | |
-| Khả năng kiểm soát AI Coding Agent | | |
-| Chất lượng đồ thị tri thức xây dựng | | |
-| Khả năng phân tích và debug hệ thống | | |
+| Mức độ hiểu bài giảng GraphRAG | 3 | - |
+| Khả năng kiểm soát AI Coding Agent | 3 | - |
+| Chất lượng đồ thị tri thức xây dựng | 3 | - |
+| Khả năng phân tích và debug hệ thống | 3 | - |
