@@ -134,6 +134,18 @@
 
 ---
 
+## 🎁 BONUS
+
+### A. Global Search via Community Reports
+Chạy `build_communities()` (NetworkX `greedy_modularity_communities`) trên 103 node/62 edge: **41 cộng đồng**. Hai cộng đồng lớn nhất phản ánh đúng cấu trúc thực tế của dữ liệu:
+- **Community 0 (6 node):** Railergy + 5 nhà cung cấp công nghệ trong dự án DB Cargo (Systerel SAS, Bachleitner Technology, Ouster, ParkVi, Applanix).
+- **Community 1 (6 node):** Apple + các công nghệ liên quan (Final Cut Pro, Logic Pro, M3, A17 Bionic, Arm) — trùng khớp chính xác với case cross-doc G05 đã phân tích ở trên, cho thấy community detection có thể dùng để tự động phát hiện "cụm chủ đề" phục vụ Global Search mà không cần LLM tốn token.
+
+### B. Self-Correction Graph Retrieval
+Chạy `self_correcting_context()` trên câu hỏi G03 (case Aaritya Technologies "vô hình" ở mục 4). Kết quả: hệ thống **tự động leo hop2 → hop3 → fallback vector** (route cuối cùng = `hop3+vector`) vì cả hop2 và hop3 đều bị đánh giá "không đủ context". Ngay cả sau khi fallback, LLM **trung thực báo vẫn thiếu** thông tin Aaritya Technologies — khớp chính xác với root-cause đã xác định ở mục Failure Analysis (lỗi gán sai `entity_type`, không phải do BFS chưa đi đủ xa). Đây là bằng chứng cho thấy self-correction giải quyết đúng vấn đề "chưa đủ hop", nhưng **không thể** khắc phục lỗi lan truyền từ tầng Extraction — ranh giới rõ ràng giữa 2 loại failure mode.
+
+---
+
 ## 🎯 TỰ ĐÁNH GIÁ
 | Tiêu chí | Điểm tự chấm (1–5) | Ghi chú |
 |----------|-------------------|---------|
